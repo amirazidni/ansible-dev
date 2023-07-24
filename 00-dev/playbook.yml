@@ -1,0 +1,9 @@
+- name: My first play
+  hosts: vps vm
+  tasks:
+   - name: Ping my managed nodes
+     ping:
+   - name: Print message
+     debug:
+       msg: Goodbye world
+

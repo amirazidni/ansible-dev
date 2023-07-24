@@ -1,0 +1,12 @@
+- name: variable playbook
+  hosts: vps vm
+  
+  vars:
+    var_one: awesome
+    var_two: This is
+    var_three: "{{ var_two }} {{ var_one }}"
+  
+  tasks:
+    - name: print out all
+      debug:
+        msg: "{{ var_three }}"
