@@ -27,6 +27,11 @@
       ansible.builtin.yum:
         name: epel-release
         state: present
+    - name: Copy files nginx.repo
+      ansible.builtin.copy:
+        src: files/nginx.repo
+        dest: /etc/yum.repos.d/nginx.repo
+        mode: "600"
     - name: Install nginx
       ansible.builtin.yum:
         name: nginx
