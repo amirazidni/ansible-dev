@@ -1,5 +1,6 @@
 - name: My first play
   hosts: vps vm
+  become: true
   tasks:
    - name: Ping my managed nodes
      ping:
