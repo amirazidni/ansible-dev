@@ -1,2 +1,4 @@
 local.yml
 .vscode
+nginx.crt
+nginx.key
