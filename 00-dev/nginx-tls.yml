@@ -1,0 +1,59 @@
+- name: Install nginx and tls
+  hosts: vps
+  become: true
+  vars:
+    key_file: /etc/nginx/ssl/nginx.key
+    cert_file: /etc/nginx/ssl/nginx.crt
+    conf_file: /etc/nginx/sites-available/default
+    server_name: aws lightsail
+  tasks:
+    - name: Install nginx on VPS
+      ansible.builtin.apt:
+        name: nginx
+
+    - name: Create directory for ssl certificates
+      ansible.builtin.file:
+        path: /etc/nginx/ssl
+        state: directory
+        mode: "600"
+
+    - name: Copy TLS keys
+      ansible.builtin.copy:
+        src: files/nginx.key
+        dest: "{{ key_file }}"
+        owner: root
+        mode: "600"
+      notify: Restart nginx
+
+    - name: Copy TLS certificate
+      ansible.builtin.copy:
+        src: files/nginx.crt
+        dest: "{{ cert_file }}"
+        mode: "600"
+      notify: Restart nginx
+
+    - name: Copy nginx config file
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
+        dest: "{{ conf_file }}"
+        mode: "600"
+      notify: Restart nginx
+
+    - name: Enable configuration
+      ansible.builtin.file:
+        dest: /etc/nginx/sites-enabled/default
+        src: "{{ conf_file }}"
+        state: link
+      notify: restart
+
+    - name: Copy index.html
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: /usr/share/nginx/html/index.html
+        mode: "644"
+
+  handlers:
+    - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
