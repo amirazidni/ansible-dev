@@ -5,11 +5,13 @@
     key_file: /etc/nginx/ssl/nginx.key
     cert_file: /etc/nginx/ssl/nginx.crt
     conf_file: /etc/nginx/sites-available/default
-    server_name: aws lightsail
+    server_name: aws-lightsail
   tasks:
     - name: Install nginx on VPS
       ansible.builtin.apt:
         name: nginx
+        update_cache: true
+        cache_valid_time: 3600
 
     - name: Create directory for ssl certificates
       ansible.builtin.file:
